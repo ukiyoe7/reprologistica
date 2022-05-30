@@ -1330,24 +1330,24 @@ gm_auth_configure(path = "C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\
 #RESUMO
 filewd_fillrate_resumo <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_resumo2","_",format(Sys.Date(),"%d_%m_%y"),".RData")
 
-fillrate_resumo <- get(load(filewd_fillrate_resumo))
+fillrate_resumo2 <- get(load(filewd_fillrate_resumo))
 
 #DADOS MP
 filewd_emp <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_mp_emp","_",format(Sys.Date(),"%d_%m_%y"),".RData")
 
-fillrate_mp_emp <- get(load(filewd_emp))
+fillrate_mp_emp2 <- get(load(filewd_emp))
 
 ## RESUMO MP
 filewd_emp_resumo <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_mp_emp_resumo","_",format(Sys.Date(),"%d_%m_%y"),".RData")
 
-fillrate_mp_emp_resumo <- get(load(filewd_emp_resumo))
+fillrate_mp_emp_resumo2 <- get(load(filewd_emp_resumo))
 
 
 filewd_emp_mail <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_mp_emp","_",format(Sys.Date(),"%d_%m_%y"),".xlsx")
 
-write.xlsx(fillrate_resumo, file = filewd_emp_mail,row.names=FALSE,sheetName = "RESUMO")
-write.xlsx(fillrate_mp_emp, file = filewd_emp_mail,row.names=FALSE,sheetName = "DADOS",append = TRUE)
-write.xlsx(fillrate_mp_emp_resumo, file = filewd_emp_mail,row.names=FALSE,sheetName = "DADOS2", append = TRUE)
+write.xlsx(fillrate_resumo2, file = filewd_emp_mail,row.names=FALSE,sheetName = "RESUMO")
+write.xlsx(fillrate_mp_emp2, file = filewd_emp_mail,row.names=FALSE,sheetName = "DADOS",append = TRUE)
+write.xlsx(fillrate_mp_emp_resumo2, file = filewd_emp_mail,row.names=FALSE,sheetName = "DADOS2", append = TRUE)
 
 
 mymail_fillrate <- gm_mime() %>% 
