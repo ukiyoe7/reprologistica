@@ -1351,7 +1351,7 @@ write.xlsx(fillrate_mp_emp_resumo2, file = filewd_emp_mail,row.names=FALSE,sheet
 
 
 mymail_fillrate <- gm_mime() %>% 
-  gm_to("sandro.jakoska@repro.com.br") %>% 
+  gm_to("sandro.jakoska@repro.com.br,carlos.machado@repro.com.br,debora.rocha@repro.com.br,estagiologistica@repro.com.br,silvano.silva@repro.com.br") %>% 
   gm_from ("comunicacao@repro.com.br") %>%
   gm_subject("RELATORIO FILL RATE") %>%
   gm_text_body("Segue Anexo relatorio.Esse e um email automatico.") %>% 

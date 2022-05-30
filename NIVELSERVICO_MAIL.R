@@ -2245,7 +2245,7 @@ write.xlsx(nivelservico_repro_linha2, file = filewd_nivelservico,row.names=FALSE
 
 
 mymail_nivelservico <- gm_mime() %>% 
-  gm_to("sandro.jakoska@repro.com.br") %>% 
+  gm_to("sandro.jakoska@repro.com.br,carlos.machado@repro.com.br,debora.rocha@repro.com.br,estagiologistica@repro.com.br,silvano.silva@repro.com.br") %>% 
   gm_from ("comunicacao@repro.com.br") %>%
   gm_subject("RELATORIO NIVEL DE SERVIÇO") %>%
   gm_text_body("Segue Anexo relatorio.Esse e um email automatico.") %>% 
