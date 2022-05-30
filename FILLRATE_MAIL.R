@@ -462,29 +462,9 @@ fill_rate_calc <- union_all(fillrate_calc_filiais,fillrate_calc_matriz_1) %>%
 
 fillrate_resumo2 <- union_all(fillrate_resumo,fill_rate_calc) 
 
-filewd_fillrate_resumo <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_resumo2","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+filewd_fillrate_resumo <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_resumo2","_",format(Sys.Date(),"%d_%m_%y"),".RData")
 
 save(fillrate_resumo2,file =filewd_fillrate_resumo)
-
-## GET SAVED DATA
-
-fillrate_repro <- get(load("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_repro.RData"))
-
-
-## ADD SAVED DATA TO CURRENT ONE
-
-fillrate_repro <- union_all(fillrate_repro,fillrate_resumo2) %>% 
-  arrange(desc(DATA)) %>% distinct() %>% as.data.frame()
-
-## REGISTER GOOGLE SHEETS
-
-range_write("1qC12w2k2mZ2RiF_Xsl27C4a3NztilFEgr7qT3sBPYJg",
-            data=fillrate_repro,sheet = "RESUMO",
-            range = "A1",reformat = FALSE)
-
-## SAVE FINAL BASE
-
-save(fillrate_repro,file = "C:\\Users\\Repro\\Documents\\LOGISTICA\\FILLRATE\\BASES\\fillrate_repro.RData" )
 
 
 
@@ -1318,7 +1298,7 @@ fillrate_mp_emp <- union_all(fillrate_mp_matriz,fillrate_mp_joinville) %>%
 
 # SAVE CURRENT DAY
 
-filewd_emp <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_mp_emp","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+filewd_emp <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_mp_emp","_",format(Sys.Date(),"%d_%m_%y"),".RData")
 
 save(fillrate_mp_emp,file =filewd_emp)
 
@@ -1337,51 +1317,6 @@ save(fillrate_mp_emp_resumo,file =filewd_emp_resumo)
 
 
 
-#GET SAVED DATA
-
-fillrate_mp <- get(load("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_mp.RData"))
-
-
-fillrate_mp_resumo <- get(load("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_mp_resumo.RData"))
-
-
-#JUNTA TODOS OS BLOCOS COM BASE ANTERIOR EM UM UNICO E REMOVE DUPLICADAS
-fillrate_mp <- union_all(fillrate_mp,fillrate_mp_emp) %>% arrange(desc(DATA))  %>% distinct() %>% as.data.frame()
-
-
-# SALVA BASE UNIFICADA
-save(fillrate_mp,file = "C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_mp.RData")
-
-# REGISTRA GOOGLE
-range_write("1qC12w2k2mZ2RiF_Xsl27C4a3NztilFEgr7qT3sBPYJg",
-            data=fillrate_mp,sheet = "PEDIDOS",
-            range = "A1",reformat = FALSE)
-
-
-#ADD BLOCKS
-fillrate_mp_resumo <- union_all(fillrate_mp_resumo,fillrate_mp_emp_resumo) %>% distinct() %>% arrange(desc(DATA)) %>%  as.data.frame()
-
-# SAVE BASE
-save(fillrate_mp_resumo,file = "C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_mp_resumo.RData")
-
-
-# REGISTER GOOGLE
-range_write("1qC12w2k2mZ2RiF_Xsl27C4a3NztilFEgr7qT3sBPYJg",
-            data=fillrate_mp_resumo,sheet = "RESUMOPEDIDOS",
-            range = "A1",reformat = FALSE)
-
-
-#  SAVE CSV FINAL
-filewd_fillrate_mp <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_mp.csv")
-
-write.csv2(fillrate_mp, file = filewd_fillrate_mp,row.names=FALSE)
-
-#SAVE CSV FINAL
-filewd_fillrate_mp_resumo <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_mp_resumo.csv")
-
-write.csv2(fillrate_mp_resumo, file = filewd_fillrate_mp_resumo,row.names=FALSE)
-
-
 ##  END ORDER DETAIL  ===================================================================================
 
 ##  SEND EMAIL  ================
@@ -1389,16 +1324,16 @@ write.csv2(fillrate_mp_resumo, file = filewd_fillrate_mp_resumo,row.names=FALSE)
 library(gmailr)
 library(xlsx)
 
-gm_auth_configure(path = "C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\sendmail.json")
+gm_auth_configure(path = "C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\sendmail.json")
 
 
 #RESUMO
-filewd_fillrate_resumo <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_resumo2","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+filewd_fillrate_resumo <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_resumo2","_",format(Sys.Date(),"%d_%m_%y"),".RData")
 
 fillrate_resumo <- get(load(filewd_fillrate_resumo))
 
 #DADOS MP
-filewd_emp <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_mp_emp","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+filewd_emp <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_mp_emp","_",format(Sys.Date(),"%d_%m_%y"),".RData")
 
 fillrate_mp_emp <- get(load(filewd_emp))
 
@@ -1416,7 +1351,7 @@ write.xlsx(fillrate_mp_emp_resumo, file = filewd_emp_mail,row.names=FALSE,sheetN
 
 
 mymail_fillrate <- gm_mime() %>% 
-  gm_to("sandro.jakoska@repro.com.br,,carlos.machado@repro.com.br,debora.rocha@repro.com.br,estagiologistica@repro.com.br,silvano.silva@repro.com.br") %>% 
+  gm_to("sandro.jakoska@repro.com.br") %>% 
   gm_from ("comunicacao@repro.com.br") %>%
   gm_subject("RELATORIO FILL RATE") %>%
   gm_text_body("Segue Anexo relatorio.Esse e um email automatico.") %>% 
