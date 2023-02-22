@@ -1,5 +1,6 @@
 ### FILL RATE REPRO
-## SANDRO JAKOSKA 2023
+### LENTES ACABADAS
+## SANDRO JAKOSKA 2022
 
 ## LIBRARIES
 
@@ -12,100 +13,128 @@ con2 <- dbConnect(odbc::odbc(), "reproreplica")
 
 ### TOTAL PEDIDOS
 
-tot_ped <- dbGetQuery(con2,"
+tot_ped_LA <- dbGetQuery(con2,"
 WITH  
-RESULT1 AS (SELECT P.ID_PEDIDO,TPCODIGO,AP.APCODIGO FROM
-PEDID P
-LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
-WHERE 
-
+PED_DATES AS (SELECT ID_PEDIDO FROM PEDID WHERE 
 /* DATES */ 
 
-PEDDTEMIS >=
-DATEADD(-7 DAY TO CURRENT_DATE) AND PEDDTEMIS < 'TODAY'
---------------------------------------
+PEDDTEMIS >='23.01.2022' AND PEDDTEMIS <= '29.01.2022'),
 
-AND
+
+RESULT1 AS (SELECT P.ID_PEDIDO,TPCODIGO,AP.APCODIGO FROM
+PEDID P
+INNER JOIN PED_DATES PDT ON P.ID_PEDIDO=PDT.ID_PEDIDO
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+               INNER JOIN PED_DATES PDT ON PD.ID_PEDIDO=PDT.ID_PEDIDO
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE GR1CODIGO=2 AND PROSITUACAO='A') PR ON PD.PROCODIGO=PR.PROCODIGO) PDP ON PDP.ID_PEDIDO=P.ID_PEDIDO   
+
+LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
+
+WHERE 
+
 P.EMPCODIGO=1
 AND TPCODIGO IN (1,2,3,6,7,12,14)
 AND PEDSITPED IN ('A','F') ),
 
 RESULT3 AS (SELECT P.ID_PEDIDO,TPCODIGO,AP.APCODIGO FROM
 PEDID P
+
+INNER JOIN PED_DATES PDT ON P.ID_PEDIDO=PDT.ID_PEDIDO
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+               INNER JOIN PED_DATES PDT ON PD.ID_PEDIDO=PDT.ID_PEDIDO
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE GR1CODIGO=2 AND PROSITUACAO='A') PR ON PD.PROCODIGO=PR.PROCODIGO)PDP ON PDP.ID_PEDIDO=P.ID_PEDIDO
+
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
+
+
 WHERE 
 
-/* DATES */ 
 
-PEDDTEMIS >=
-DATEADD(-7 DAY TO CURRENT_DATE) AND PEDDTEMIS < 'TODAY'
---------------------------------------
-
-AND
 P.EMPCODIGO=3
 AND TPCODIGO IN (1,3)
 AND PEDSITPED IN ('A','F') ),
 
 RESULT4 AS (SELECT P.ID_PEDIDO,TPCODIGO,AP.APCODIGO FROM
 PEDID P
+
+INNER JOIN PED_DATES PDT ON P.ID_PEDIDO=PDT.ID_PEDIDO
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+               INNER JOIN PED_DATES PDT ON PD.ID_PEDIDO=PDT.ID_PEDIDO
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE GR1CODIGO=2 AND PROSITUACAO='A') PR ON PD.PROCODIGO=PR.PROCODIGO)PDP ON PDP.ID_PEDIDO=P.ID_PEDIDO
+
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
+
+
 WHERE 
 
-/* DATES */ 
 
-PEDDTEMIS >=
-DATEADD(-7 DAY TO CURRENT_DATE) AND PEDDTEMIS < 'TODAY'
---------------------------------------
-
-AND
 P.EMPCODIGO=4
 AND TPCODIGO IN (1,3)
 AND PEDSITPED IN ('A','F') ),
 
 RESULT5 AS (SELECT P.ID_PEDIDO,TPCODIGO,AP.APCODIGO FROM
 PEDID P
+
+INNER JOIN PED_DATES PDT ON P.ID_PEDIDO=PDT.ID_PEDIDO
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+               INNER JOIN PED_DATES PDT ON PD.ID_PEDIDO=PDT.ID_PEDIDO
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE GR1CODIGO=2 AND PROSITUACAO='A') PR ON PD.PROCODIGO=PR.PROCODIGO)PDP ON PDP.ID_PEDIDO=P.ID_PEDIDO 
+
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
+
 WHERE 
 
-/* DATES */ 
-
-PEDDTEMIS >=
-DATEADD(-7 DAY TO CURRENT_DATE) AND PEDDTEMIS < 'TODAY'
---------------------------------------
-
-AND
 P.EMPCODIGO=5
 AND TPCODIGO IN (1,3)
 AND PEDSITPED IN ('A','F') ),
 
 RESULT8 AS (SELECT P.ID_PEDIDO,TPCODIGO,AP.APCODIGO FROM
 PEDID P
+
+INNER JOIN PED_DATES PDT ON P.ID_PEDIDO=PDT.ID_PEDIDO
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+               INNER JOIN PED_DATES PDT ON PD.ID_PEDIDO=PDT.ID_PEDIDO
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE GR1CODIGO=2 AND PROSITUACAO='A') PR ON PD.PROCODIGO=PR.PROCODIGO)PDP ON PDP.ID_PEDIDO=P.ID_PEDIDO 
+
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
+
 WHERE 
 
-/* DATES */ 
-
-PEDDTEMIS >=
-DATEADD(-7 DAY TO CURRENT_DATE) AND PEDDTEMIS < 'TODAY'
---------------------------------------
-
-AND
 P.EMPCODIGO=8
 AND TPCODIGO IN (1,3,9)
 AND PEDSITPED IN ('A','F')),
 
 RESULT9 AS (SELECT P.ID_PEDIDO,TPCODIGO,AP.APCODIGO FROM
 PEDID P
+
+INNER JOIN PED_DATES PDT ON P.ID_PEDIDO=PDT.ID_PEDIDO
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+               INNER JOIN PED_DATES PDT ON PD.ID_PEDIDO=PDT.ID_PEDIDO
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE GR1CODIGO=2 AND PROSITUACAO='A') PR ON PD.PROCODIGO=PR.PROCODIGO)PDP ON PDP.ID_PEDIDO=P.ID_PEDIDO   
+  
+
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
+
 WHERE 
 
-/* DATES */ 
-
-PEDDTEMIS >=
-DATEADD(-7 DAY TO CURRENT_DATE) AND PEDDTEMIS < 'TODAY'
---------------------------------------
-
-AND
 P.EMPCODIGO=1
 AND TPCODIGO IN (10,11)
 AND PEDSITPED IN ('A','F'))
@@ -181,24 +210,29 @@ AND PEDSITPED IN ('A','F'))
 ") 
 
 
-tot_ped_natd <- dbGetQuery(con2,"
-WITH 
+tot_ped_natd_LA <- dbGetQuery(con2,"
+WITH PED_DATES AS (SELECT ID_PEDIDO FROM PEDID WHERE 
+/* DATES */ 
+
+PEDDTEMIS >='23.01.2022' AND PEDDTEMIS <= '29.01.2022'),
+--------------------------------------)
+
 RESULT1 AS (SELECT P.ID_PEDIDO,
                     TPCODIGO,
                      AP.APCODIGO,
                       LP.LPCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+               INNER JOIN PED_DATES PDT ON PD.ID_PEDIDO=PDT.ID_PEDIDO
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE GR1CODIGO=2 AND PROSITUACAO='A') PR ON PD.PROCODIGO=PR.PROCODIGO) PDP ON PDP.ID_PEDIDO=P.ID_PEDIDO   
+
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
 LEFT JOIN LOCALPED LP ON LP.LPCODIGO  = AP.LPCODIGO 
 WHERE 
 
-/* DATES */ 
-
-PEDDTEMIS >=
-DATEADD(-7 DAY TO CURRENT_DATE) AND PEDDTEMIS < 'TODAY'
---------------------------------------
-
-AND
 P.EMPCODIGO=1
 AND TPCODIGO IN (1,2,3,6,7,12,14)
 AND PEDSITPED IN ('A','F') ),
@@ -209,18 +243,17 @@ RESULT3 AS (SELECT P.ID_PEDIDO,
                       AP.APCODIGO, 
                        LP.LPCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+               INNER JOIN PED_DATES PDT ON PD.ID_PEDIDO=PDT.ID_PEDIDO
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE GR1CODIGO=2 AND PROSITUACAO='A') PR ON PD.PROCODIGO=PR.PROCODIGO) PDP ON PDP.ID_PEDIDO=P.ID_PEDIDO   
+                  
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
 LEFT JOIN LOCALPED LP ON LP.LPCODIGO  = AP.LPCODIGO 
 WHERE 
 
-
-/* DATES */ 
-
-PEDDTEMIS >=
-DATEADD(-7 DAY TO CURRENT_DATE) AND PEDDTEMIS < 'TODAY'
---------------------------------------
-
-AND
 P.EMPCODIGO=3
 AND TPCODIGO IN (1,3)
 AND PEDSITPED IN ('A','F') ),
@@ -230,17 +263,17 @@ RESULT4 AS (SELECT P.ID_PEDIDO,
                      AP.APCODIGO,
                       LP.LPCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+               INNER JOIN PED_DATES PDT ON PD.ID_PEDIDO=PDT.ID_PEDIDO
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE GR1CODIGO=2 AND PROSITUACAO='A') PR ON PD.PROCODIGO=PR.PROCODIGO) PDP ON PDP.ID_PEDIDO=P.ID_PEDIDO   
+                  
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
 LEFT JOIN LOCALPED LP ON LP.LPCODIGO  = AP.LPCODIGO 
 WHERE 
 
-/* DATES */ 
-
-PEDDTEMIS >=
-DATEADD(-7 DAY TO CURRENT_DATE) AND PEDDTEMIS < 'TODAY'
---------------------------------------
-
-AND
 P.EMPCODIGO=4
 AND TPCODIGO IN (1,3)
 AND PEDSITPED IN ('A','F') ),
@@ -250,17 +283,16 @@ RESULT5 AS (SELECT P.ID_PEDIDO,
                       AP.APCODIGO,
                        LP.LPCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+               INNER JOIN PED_DATES PDT ON PD.ID_PEDIDO=PDT.ID_PEDIDO
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE GR1CODIGO=2 AND PROSITUACAO='A') PR ON PD.PROCODIGO=PR.PROCODIGO) PDP ON PDP.ID_PEDIDO=P.ID_PEDIDO   
+
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
 LEFT JOIN LOCALPED LP ON LP.LPCODIGO  = AP.LPCODIGO 
 WHERE 
-
-/* DATES */ 
-
-PEDDTEMIS >=
-DATEADD(-7 DAY TO CURRENT_DATE) AND PEDDTEMIS < 'TODAY'
---------------------------------------
-
-AND
 P.EMPCODIGO=5
 AND TPCODIGO IN (1,3)
 AND PEDSITPED IN ('A','F') ),
@@ -270,17 +302,17 @@ RESULT8 AS (SELECT P.ID_PEDIDO,
                      AP.APCODIGO,
                       LP.LPCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+               INNER JOIN PED_DATES PDT ON PD.ID_PEDIDO=PDT.ID_PEDIDO
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE GR1CODIGO=2 AND PROSITUACAO='A') PR ON PD.PROCODIGO=PR.PROCODIGO) PDP ON PDP.ID_PEDIDO=P.ID_PEDIDO   
+
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
 LEFT JOIN LOCALPED LP ON LP.LPCODIGO  = AP.LPCODIGO 
 WHERE 
 
-/* DATES */ 
-
-PEDDTEMIS >=
-DATEADD(-7 DAY TO CURRENT_DATE) AND PEDDTEMIS < 'TODAY'
---------------------------------------
-
-AND
 P.EMPCODIGO=8
 AND TPCODIGO IN (1,3,9)
 AND PEDSITPED IN ('A','F') ),
@@ -290,18 +322,17 @@ RESULT9 AS (SELECT P.ID_PEDIDO,
                      AP.APCODIGO,
                       LP.LPCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+               INNER JOIN PED_DATES PDT ON PD.ID_PEDIDO=PDT.ID_PEDIDO
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE GR1CODIGO=2 AND PROSITUACAO='A') PR ON PD.PROCODIGO=PR.PROCODIGO) PDP ON PDP.ID_PEDIDO=P.ID_PEDIDO   
+                  
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
 LEFT JOIN LOCALPED LP ON LP.LPCODIGO  = AP.LPCODIGO 
 WHERE 
 
-/* DATES */ 
-
-PEDDTEMIS >=
-DATEADD(-7 DAY TO CURRENT_DATE) AND PEDDTEMIS < 'TODAY'
---------------------------------------
-
-
-AND
 P.EMPCODIGO=1
 AND TPCODIGO IN (10,11)
 AND PEDSITPED IN ('A','F') )
@@ -409,7 +440,7 @@ AND PEDSITPED IN ('A','F') )
 ")
 
 
-ped_control <- dbGetQuery(con2,"
+ped_control_LA <- dbGetQuery(con2,"
   EXECUTE BLOCK RETURNS (EMPRESA VARCHAR(30),TIPO VARCHAR(30),INDICADOR VARCHAR(30),TOTAL DECIMAL(15,2))
   
   AS DECLARE VARIABLE CLIENTE INT;
@@ -425,6 +456,7 @@ ped_control <- dbGetQuery(con2,"
                       DO
                        BEGIN
                         FOR
+                        
   
                          SELECT 
                            CASE 
@@ -436,14 +468,25 @@ ped_control <- dbGetQuery(con2,"
                                  TPCODIGO,
                                   COUNT (DISTINCT (P.ID_PEDIDO)) TOTAL,'CONTROL' INDICADOR
                                    FROM PEDID P
-                                    WHERE P.PEDSITPED IN ('A','F')
-                                     AND P.CLICODIGO = :CLIENTE AND P.TPCODIGO IN ('10','11') AND 
-
+                                   
+                                   INNER JOIN (SELECT ID_PEDIDO FROM PEDID WHERE 
 /* DATES */ 
 
-PEDDTEMIS >=
-DATEADD(-7 DAY TO CURRENT_DATE) AND PEDDTEMIS < 'TODAY'
---------------------------------------
+PEDDTEMIS >='23.01.2022' AND PEDDTEMIS <= '29.01.2022') PDT ON P.ID_PEDIDO=PDT.ID_PEDIDO
+                                   
+                                    /* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+               INNER JOIN (SELECT ID_PEDIDO FROM PEDID WHERE 
+/* DATES */ 
+
+PEDDTEMIS >='23.01.2022' AND PEDDTEMIS <= '29.01.2022') PDT ON PD.ID_PEDIDO=PDT.ID_PEDIDO
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE GR1CODIGO=2) 
+                  PR ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+                  
+                                    WHERE P.PEDSITPED IN ('A','F')
+                                     AND P.CLICODIGO = :CLIENTE AND P.TPCODIGO IN ('10','11')  
+
 
 AND EXISTS (SELECT 1 FROM PEDROTEIRO PR1 WHERE PR1.ALXCODIGO = 1 AND PR1.ID_PEDIDO = P.ID_PEDIDO)
 AND NOT EXISTS (SELECT 1 FROM PEDROTEIRO PR2 WHERE PR2.ALXCODIGO IN ('15','16','10','9','38','40','6') 
@@ -461,7 +504,15 @@ AND PR2.ID_PEDIDO = P.ID_PEDIDO) GROUP BY 1,2
   
   ")
 
-ped_quebras <- dbGetQuery(con2,"
+ped_quebras_LA <- dbGetQuery(con2,"
+
+WITH  
+PED_DATES AS (SELECT ID_PEDIDO FROM PEDID WHERE 
+/* DATES */ 
+
+PEDDTEMIS >='23.01.2022' AND PEDDTEMIS <= '29.01.2022')
+
+
 SELECT 
       CASE 
        WHEN EMPCODIGO=1 THEN 'MATRIZ' 
@@ -473,39 +524,48 @@ SELECT
       
         TPCODIGO TIPO,
          'QUEBRAS' INDICADOR,
-           COUNT(ID_PEDIDO) TOTAL
-            FROM PEDID
+           COUNT(P.ID_PEDIDO) TOTAL
+            FROM PEDID P
+            
+            INNER JOIN PED_DATES PDT ON P.ID_PEDIDO=PDT.ID_PEDIDO
+             
+            /* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+               INNER JOIN PED_DATES PDT ON PD.ID_PEDIDO=PDT.ID_PEDIDO
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE GR1CODIGO=2) 
+                  PR ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+                  
              WHERE FISCODIGO1='5.927'
               AND CLICODIGO=579
-              /* DATES */ 
-               AND  PEDDTEMIS >= DATEADD(-7 DAY TO CURRENT_DATE) AND PEDDTEMIS < 'TODAY'
+
                GROUP BY 1,2,3
 --------------------------------------")
 
 
 ## RESUMO PEDIDOS POR TIPO
 
-fillrate_resumo_1 <- rbind(tot_ped,tot_ped_natd,ped_control,ped_quebras) %>% 
+fillrate_resumo_1_LA <- rbind(tot_ped_LA,tot_ped_natd_LA,ped_control_LA,ped_quebras_LA) %>% 
   mutate(TIPO=as.numeric(TIPO))
 
-fillrate_resumo_2 <- fillrate_resumo_1 %>% 
+fillrate_resumo_2_LA <- fillrate_resumo_1_LA %>% 
   dcast(EMPRESA + INDICADOR ~ TIPO,value.var = "TOTAL") %>% 
   arrange(desc(EMPRESA)) %>% 
   as.data.frame()  %>% 
   rowwise() %>% 
   mutate(TOTAL= rowSums(across(where(is.numeric)),na.rm = TRUE)) %>% 
-  mutate(DATA=Sys.Date())
+  mutate(DATA='23.01.2022 - 29.01.2022')
 
 
 
 
-View(fillrate_resumo_2)
+View(fillrate_resumo_2_LA)
 
 ## SAVE SUMMARY 
 
-filewd_fillrate_resumo_2 <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_resumo_2","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+filewd_fillrate_resumo_2_LA <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_resumo_2_LA","_",format(Sys.Date(),"%d_%m_%y"),".RData")
 
-save(fillrate_resumo_2,file =filewd_fillrate_resumo_2)
+save(fillrate_resumo_2_LA,file =filewd_fillrate_resumo_2_LA)
 
 
 
@@ -514,61 +574,61 @@ save(fillrate_resumo_2,file =filewd_fillrate_resumo_2)
 
 ## CALCULO FILIAIS 
 
-fillrate_calc_filiais <- fillrate_resumo_1 %>% 
+fillrate_calc_filiais_LA <- fillrate_resumo_1_LA %>% 
   filter(!str_detect(EMPRESA,"MATRIZ")) %>% 
   group_by(EMPRESA) %>% 
   mutate(INDICADOR=trimws(INDICADOR)) %>% 
   summarize(VALOR=(1-((sum(TOTAL[INDICADOR=='CONTROL'])+sum(TOTAL[INDICADOR=='PEDIDOS NAO ATENDIDOS']))/
                         sum(TOTAL[INDICADOR=='TOTAL PEDIDOS'])))*100) %>%
   mutate(VALOR=round(VALOR,2)) %>% mutate(INDICADOR="FILL RATE: CONTROL + NAO ATENDIDOS x TOTAL PEDIDOS") %>% 
-  mutate(DATA=Sys.Date()) %>% as.data.frame() %>% .[,c(1,3,2,4)] 
+  mutate(DATA='23.01.2022 - 29.01.2022') %>% as.data.frame() %>% .[,c(1,3,2,4)] 
 
 
 ## CALCULO MATRIZ
 
-fillrate_calc_matriz_1 <- fillrate_resumo_1 %>%  
+fillrate_calc_matriz_1_LA <- fillrate_resumo_1_LA %>%  
   filter(str_detect(EMPRESA,"MATRIZ"))%>% 
   group_by(EMPRESA) %>% 
   mutate(INDICADOR=trimws(INDICADOR)) %>% 
   summarize(VALOR=(1-((sum(TOTAL[INDICADOR=='PEDIDOS NAO ATENDIDOS']))/sum(TOTAL[INDICADOR=='TOTAL PEDIDOS'])))*100) %>%
   mutate(VALOR=round(VALOR,2)) %>% mutate(INDICADOR="FILL RATE: NAO ATENDIDOS x TOTAL") %>% 
-  mutate(DATA=Sys.Date()) %>% as.data.frame() %>% .[,c(1,3,2,4)] 
+  mutate(DATA='23.01.2022 - 29.01.2022') %>% as.data.frame() %>% .[,c(1,3,2,4)] 
 
-fillrate_calc_matriz_2 <- fillrate_resumo_1 %>%  
+fillrate_calc_matriz_2_LA <- fillrate_resumo_1_LA %>%  
   mutate(INDICADOR=trimws(INDICADOR)) %>% 
   filter(str_detect(EMPRESA,"MATRIZ"))%>% 
   group_by(EMPRESA) %>%
   summarize(VALOR=(1-((sum(TOTAL[INDICADOR=='PEDIDOS CONTROL NAO ATENDIDOS']))/sum(TOTAL[INDICADOR=='TOTAL PEDIDOS CONTROL'])))*100) %>%
   mutate(VALOR=round(VALOR,2)) %>% mutate(INDICADOR="FILL RATE: CONTROL NAO ATENDIDOS x CONTROL TOTAL") %>% 
-  mutate(DATA=Sys.Date()) %>% as.data.frame() %>% .[,c(1,3,2,4)] 
+  mutate(DATA='23.01.2022 - 29.01.2022') %>% as.data.frame() %>% .[,c(1,3,2,4)] 
 
-fillrate_calc_matriz_3 <- fillrate_resumo_1 %>%  
+fillrate_calc_matriz_3_LA <- fillrate_resumo_1_LA %>%  
   mutate(INDICADOR=trimws(INDICADOR)) %>% 
   filter(str_detect(EMPRESA,"MATRIZ"))%>% 
   group_by(EMPRESA) %>%
   summarize(VALOR=(1-((sum(TOTAL[INDICADOR=='PEDIDOS CONTROL NAO ATENDIDOS']))/sum(TOTAL[INDICADOR=='TOTAL PEDIDOS'])))*100) %>%
   mutate(VALOR=round(VALOR,2)) %>% mutate(INDICADOR="FILL RATE: CONTROL NAO ATENDIDOS x TOTAL PEDIDOS") %>% 
-  mutate(DATA=Sys.Date()) %>% as.data.frame() %>% .[,c(1,3,2,4)] 
+  mutate(DATA='23.01.2022 - 29.01.2022') %>% as.data.frame() %>% .[,c(1,3,2,4)] 
 
 
-fillrate_calc <- union_all(fillrate_calc_filiais,fillrate_calc_matriz_1) %>% 
-  union_all(.,fillrate_calc_matriz_2) %>% 
-  union_all(.,fillrate_calc_matriz_3) %>% rename(TOTAL=VALOR)
+fillrate_calc_LA <- union_all(fillrate_calc_filiais_LA,fillrate_calc_matriz_1_LA) %>% 
+  union_all(.,fillrate_calc_matriz_2_LA) %>% 
+  union_all(.,fillrate_calc_matriz_3_LA) %>% rename(TOTAL=VALOR)
 
 
 
 ## SAVE CALC SUMMARY 
 
-filewd_fillrate_calc<-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_calc","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+filewd_fillrate_calc_LA<-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_calc_LA","_",format(Sys.Date(),"%d_%m_%y"),".RData")
 
-save(fillrate_calc,file =filewd_fillrate_calc)
+save(fillrate_calc_LA,file =filewd_fillrate_calc_LA)
 
 
 ## START ORDER DETAILS =========================================================================================
 
 # MATRIZ
 
-fillrate_mp_matriz  <- dbGetQuery(con2,"
+fillrate_mp_matriz_LA <- dbGetQuery(con2,"
   EXECUTE BLOCK RETURNS (
                         EMPRESA VARCHAR(30),
                          INDICADOR VARCHAR(30),
@@ -592,14 +652,21 @@ fillrate_mp_matriz  <- dbGetQuery(con2,"
 WITH 
 RESULT1 AS (SELECT DISTINCT P.ID_PEDIDO,PEDDTEMIS,AP.APCODIGO,LP.LPCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+               INNER JOIN (SELECT ID_PEDIDO FROM PEDID WHERE PEDDTEMIS >='23.01.2022' AND PEDDTEMIS <= '29.01.2022') PDT ON PD.ID_PEDIDO=PDT.ID_PEDIDO
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE GR1CODIGO=2) 
+                  PR ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+                  
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
 LEFT JOIN LOCALPED LP ON LP.LPCODIGO  = AP.LPCODIGO 
 WHERE
 
 /* DATES */ 
 
-PEDDTEMIS >=
-DATEADD(-7 DAY TO CURRENT_DATE) AND PEDDTEMIS < 'TODAY'
+PEDDTEMIS >='23.01.2022' AND PEDDTEMIS <= '29.01.2022'
 --------------------------------------
 
 AND P.EMPCODIGO=1
@@ -680,7 +747,7 @@ SELECT
   ")
 
 #JOINVILLE
-fillrate_mp_joinville  <- dbGetQuery(con2,"
+fillrate_mp_joinville_LA  <- dbGetQuery(con2,"
   EXECUTE BLOCK RETURNS ( 
                       EMPRESA VARCHAR(30),
                        INDICADOR VARCHAR(30), 
@@ -705,6 +772,14 @@ fillrate_mp_joinville  <- dbGetQuery(con2,"
 WITH 
 RESULT3 AS (SELECT DISTINCT P.ID_PEDIDO,PEDDTEMIS,AP.APCODIGO,LP.LPCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+               INNER JOIN(SELECT ID_PEDIDO FROM PEDID WHERE PEDDTEMIS >='23.01.2022' AND PEDDTEMIS <= '29.01.2022') PDT ON PD.ID_PEDIDO=PDT.ID_PEDIDO
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE GR1CODIGO=2) 
+                  PR ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+                  
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
 LEFT JOIN LOCALPED LP ON LP.LPCODIGO  = AP.LPCODIGO 
 WHERE 
@@ -712,8 +787,7 @@ WHERE
 
 /* DATES */ 
 
-PEDDTEMIS >=
-DATEADD(-7 DAY TO CURRENT_DATE) AND PEDDTEMIS < 'TODAY'
+PEDDTEMIS >='23.01.2022' AND PEDDTEMIS <= '29.01.2022'
 --------------------------------------
 
 AND
@@ -797,7 +871,7 @@ SELECT
   ")
 
 #CRICIUMA
-fillrate_mp_criciuma  <- dbGetQuery(con2,"
+fillrate_mp_criciuma_LA  <- dbGetQuery(con2,"
  EXECUTE BLOCK RETURNS ( 
                       EMPRESA VARCHAR(30), 
                        INDICADOR VARCHAR(30),
@@ -821,14 +895,21 @@ fillrate_mp_criciuma  <- dbGetQuery(con2,"
 WITH 
 RESULT1 AS (SELECT DISTINCT P.ID_PEDIDO,PEDDTEMIS,AP.APCODIGO,LP.LPCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+                INNER JOIN (SELECT ID_PEDIDO FROM PEDID WHERE PEDDTEMIS >='23.01.2022' AND PEDDTEMIS <= '29.01.2022') PDT ON PD.ID_PEDIDO=PDT.ID_PEDIDO
+                 INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE GR1CODIGO=2) 
+                  PR ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+                  
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
 LEFT JOIN LOCALPED LP ON LP.LPCODIGO  = AP.LPCODIGO 
 WHERE 
 
 /* DATES */ 
 
-PEDDTEMIS >=
-DATEADD(-7 DAY TO CURRENT_DATE) AND PEDDTEMIS < 'TODAY'
+PEDDTEMIS >='23.01.2022' AND PEDDTEMIS <= '29.01.2022'
 --------------------------------------
 
 
@@ -914,7 +995,7 @@ SELECT
   ")
 
 #CHAPECO
-fillrate_mp_chapeco  <- dbGetQuery(con2,"
+fillrate_mp_chapeco_LA  <- dbGetQuery(con2,"
  EXECUTE BLOCK RETURNS ( 
                       EMPRESA VARCHAR(30),
                        INDICADOR VARCHAR(30), 
@@ -938,14 +1019,21 @@ fillrate_mp_chapeco  <- dbGetQuery(con2,"
 WITH 
 RESULT1 AS (SELECT DISTINCT P.ID_PEDIDO,PEDDTEMIS,AP.APCODIGO,LP.LPCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+                INNER JOIN (SELECT ID_PEDIDO FROM PEDID WHERE PEDDTEMIS >='23.01.2022' AND PEDDTEMIS <= '29.01.2022') PDT ON PD.ID_PEDIDO=PDT.ID_PEDIDO
+                 INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE GR1CODIGO=2) 
+                  PR ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
 LEFT JOIN LOCALPED LP ON LP.LPCODIGO  = AP.LPCODIGO 
 WHERE 
 
 /* DATES */ 
 
-PEDDTEMIS >=
-DATEADD(-7 DAY TO CURRENT_DATE) AND PEDDTEMIS < 'TODAY'
+PEDDTEMIS >='23.01.2022' AND PEDDTEMIS <= '29.01.2022'
 --------------------------------------
 
 AND
@@ -1029,7 +1117,7 @@ SELECT
   ")
 
 #BC
-fillrate_mp_bc  <- dbGetQuery(con2,"
+fillrate_mp_bc_LA  <- dbGetQuery(con2,"
  EXECUTE BLOCK RETURNS ( 
                       EMPRESA VARCHAR(30), 
                        INDICADOR VARCHAR(30), 
@@ -1053,6 +1141,14 @@ fillrate_mp_bc  <- dbGetQuery(con2,"
 WITH 
 RESULT1 AS (SELECT DISTINCT P.ID_PEDIDO,PEDDTEMIS,AP.APCODIGO,LP.LPCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+               INNER JOIN (SELECT ID_PEDIDO FROM PEDID WHERE PEDDTEMIS >='23.01.2022' AND PEDDTEMIS <= '29.01.2022') PDT ON PD.ID_PEDIDO=PDT.ID_PEDIDO
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE GR1CODIGO=2) 
+                  PR ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+                  
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
 LEFT JOIN LOCALPED LP ON LP.LPCODIGO  = AP.LPCODIGO 
 WHERE 
@@ -1060,8 +1156,7 @@ WHERE
 
 /* DATES */ 
 
-PEDDTEMIS >=
-DATEADD(-7 DAY TO CURRENT_DATE) AND PEDDTEMIS < 'TODAY'
+PEDDTEMIS >='23.01.2022' AND PEDDTEMIS <= '29.01.2022'
 --------------------------------------
 
 AND
@@ -1149,7 +1244,7 @@ SELECT
 
 
 # CONTROL
-fillrate_mp_control  <- dbGetQuery(con2,"
+fillrate_mp_control_LA  <- dbGetQuery(con2,"
  EXECUTE BLOCK RETURNS ( 
                       EMPRESA VARCHAR(30), 
                        INDICADOR VARCHAR(30), 
@@ -1173,12 +1268,20 @@ fillrate_mp_control  <- dbGetQuery(con2,"
 SELECT DISTINCT
    PE.ID_PEDIDO
 FROM PEDID PE
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+               INNER JOIN (SELECT ID_PEDIDO FROM PEDID WHERE PEDDTEMIS >='23.01.2022' AND PEDDTEMIS <= '29.01.2022') PDT ON PD.ID_PEDIDO=PDT.ID_PEDIDO
+
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE GR1CODIGO=2) 
+                  PR ON PR.PROCODIGO=PD.PROCODIGO) PRD ON PE.ID_PEDIDO=PRD.ID_PEDIDO 
+
 WHERE 
 
 /* DATES */ 
 
-PEDDTEMIS >=
-DATEADD(-7 DAY TO CURRENT_DATE) AND PEDDTEMIS < 'TODAY'
+PEDDTEMIS >='23.01.2022' AND PEDDTEMIS <= '29.01.2022'
 --------------------------------------
 
 AND PE.PEDSITPED IN ('A','F')
@@ -1268,7 +1371,7 @@ SELECT
 # CONTROL NOT ATEND MATRIZ
 
 
-fillrate_mp_control_matriz  <- dbGetQuery(con2,"
+fillrate_mp_control_matriz_LA  <- dbGetQuery(con2,"
   EXECUTE BLOCK RETURNS (
                         EMPRESA VARCHAR(30),
                          INDICADOR VARCHAR(30),
@@ -1292,14 +1395,21 @@ fillrate_mp_control_matriz  <- dbGetQuery(con2,"
 WITH 
 RESULT11 AS (SELECT DISTINCT P.ID_PEDIDO,PEDDTEMIS,AP.APCODIGO,LP.LPCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+                INNER JOIN (SELECT ID_PEDIDO FROM PEDID WHERE PEDDTEMIS >='23.01.2022' AND PEDDTEMIS <= '29.01.2022') PDT ON PD.ID_PEDIDO=PDT.ID_PEDIDO
+                 INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE GR1CODIGO=2) 
+                  PR ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
 LEFT JOIN LOCALPED LP ON LP.LPCODIGO  = AP.LPCODIGO 
 WHERE 
 
 /* DATES */ 
 
-PEDDTEMIS >=
-DATEADD(-7 DAY TO CURRENT_DATE) AND PEDDTEMIS < 'TODAY'
+PEDDTEMIS >='23.01.2022' AND PEDDTEMIS <= '29.01.2022'
 --------------------------------------
 
 AND
@@ -1382,39 +1492,33 @@ SELECT
 
 # ADD ALL BLOCKS
 
-fillrate_mp_emp <- union_all(fillrate_mp_matriz,fillrate_mp_joinville) %>% 
-  union_all(.,fillrate_mp_criciuma) %>% 
-  union_all(.,fillrate_mp_chapeco) %>% 
-  union_all(.,fillrate_mp_bc) %>% 
-  union_all(.,fillrate_mp_control) %>% 
-  union_all(.,fillrate_mp_control_matriz) %>% 
-  mutate(DATA=Sys.Date()) %>% distinct() %>% as.data.frame()
-
-fillrate_mp_emp <- fillrate_mp_emp %>% 
-  filter(substr(trimws(MATERIAL), 1, 2)!='LD') %>% 
-  filter(substr(trimws(MATERIAL), 1, 3)!='PAP') %>% 
-  filter(substr(trimws(MATERIAL), 1, 2)!='LP') %>% 
-  filter(trimws(UN)!='PR') 
+fillrate_mp_emp_LA <- union_all(fillrate_mp_matriz_LA,fillrate_mp_joinville_LA) %>% 
+  union_all(.,fillrate_mp_criciuma_LA) %>% 
+  union_all(.,fillrate_mp_chapeco_LA) %>% 
+  union_all(.,fillrate_mp_bc_LA) %>% 
+  union_all(.,fillrate_mp_control_LA) %>% 
+  union_all(.,fillrate_mp_control_matriz_LA) %>% 
+  mutate(DATA='23.01.2022 - 29.01.2022') %>% distinct() %>% as.data.frame()
 
 
 # SAVE CURRENT DAY
 
-filewd_emp <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_mp_emp","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+filewd_emp_LA <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_mp_emp_LA","_",format(Sys.Date(),"%d_%m_%y"),".RData")
 
-save(fillrate_mp_emp,file =filewd_emp)
+save(fillrate_mp_emp_LA,file =filewd_emp_LA)
 
 
 # AGGREG MP AND SUM
 
-fillrate_mp_emp_resumo <- fillrate_mp_emp %>% group_by(INDICADOR,CHAVE,DESCRICAO_CHAVE) %>% 
+fillrate_mp_emp_resumo_LA <- fillrate_mp_emp_LA %>% group_by(INDICADOR,CHAVE,DESCRICAO_CHAVE) %>% 
   summarize(QTD=sum(QTD)) %>% 
   arrange(desc(QTD)) %>% 
-  mutate(DATA=Sys.Date()) %>%  as.data.frame()
+  mutate(DATA='23.01.2022 - 29.01.2022') %>%  as.data.frame()
 
-filewd_emp_resumo <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_mp_emp_resumo","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+filewd_emp_resumo_LA <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_mp_emp_resumo_LA","_",format(Sys.Date(),"%d_%m_%y"),".RData")
 
 
-save(fillrate_mp_emp_resumo,file =filewd_emp_resumo)
+save(fillrate_mp_emp_resumo_LA,file =filewd_emp_resumo_LA)
 
 
 ##  SEND EMAIL  ==============================================================================================
@@ -1422,43 +1526,44 @@ save(fillrate_mp_emp_resumo,file =filewd_emp_resumo)
 library(gmailr)
 library(xlsx)
 
-gm_auth_configure(path = "C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\sendmail.json")
+gm_auth_configure(path = "C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\sendmail.json")
 
 
 #RESUMO
-filewd_fillrate_resumo <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_resumo_2","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+filewd_fillrate_resumo_LA <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_resumo_2_LA","_",format(Sys.Date(),"%d_%m_%y"),".RData")
 
-fillrate_resumo <- get(load(filewd_fillrate_resumo)) %>% as.data.frame()
+fillrate_resumo_LA <- get(load(filewd_fillrate_resumo_LA)) %>% as.data.frame()
 
 #CALCULO
-filewd_fillrate_calc <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_calc","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+filewd_fillrate_calc_LA <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_calc_LA","_",format(Sys.Date(),"%d_%m_%y"),".RData")
 
-fillrate_calc <- get(load(filewd_fillrate_calc))
+fillrate_calc_LA <- get(load(filewd_fillrate_calc_LA))
 
 #DADOS MP
-filewd_emp <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_mp_emp","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+filewd_emp_LA <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_mp_emp_LA","_",format(Sys.Date(),"%d_%m_%y"),".RData")
 
-fillrate_mp_emp <- get(load(filewd_emp))
+fillrate_mp_emp_LA <- get(load(filewd_emp_LA))
 
 ## RESUMO MP
-filewd_emp_resumo <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_mp_emp_resumo","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+filewd_emp_resumo_LA <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_mp_emp_resumo_LA","_",format(Sys.Date(),"%d_%m_%y"),".RData")
 
-fillrate_mp_emp_resumo <- get(load(filewd_emp_resumo))
-
-
-filewd_emp_mail <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_mp_emp","_",format(Sys.Date(),"%d_%m_%y"),".xlsx")
-
-write.xlsx(fillrate_resumo, file = filewd_emp_mail,row.names=FALSE,sheetName = "RESUMO",showNA=FALSE)
-write.xlsx(fillrate_calc, file = filewd_emp_mail,row.names=FALSE,sheetName = "CALCULO_FILLRATE",showNA=FALSE,append = TRUE)
-write.xlsx(fillrate_mp_emp, file = filewd_emp_mail,row.names=FALSE,sheetName = "DADOS",append = TRUE)
-write.xlsx(fillrate_mp_emp_resumo, file = filewd_emp_mail,row.names=FALSE,sheetName = "DADOS2", append = TRUE)
+fillrate_mp_emp_resumo_LA <- get(load(filewd_emp_resumo_LA))
 
 
-mymail_fillrate <- gm_mime() %>% 
-  gm_to("sandro.jakoska@repro.com.br") %>% 
+filewd_emp_mail_LA <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_mp_emp_LA_02.01.2022 - 08.01.2022.xlsx")
+
+write.xlsx(fillrate_resumo_LA, file = filewd_emp_mail_LA,row.names=FALSE,sheetName = "RESUMO",showNA=FALSE)
+write.xlsx(fillrate_calc_LA, file = filewd_emp_mail_LA,row.names=FALSE,sheetName = "CALCULO_FILLRATE",showNA=FALSE,append = TRUE)
+write.xlsx(fillrate_mp_emp_LA, file = filewd_emp_mail_LA,row.names=FALSE,sheetName = "DADOS", append = TRUE)
+write.xlsx(fillrate_mp_emp_resumo_LA, file = filewd_emp_mail_LA,row.names=FALSE,sheetName = "DADOS2", append = TRUE)
+
+
+
+mymail_fillrate_LA <- gm_mime() %>% 
+  gm_to("sandro.jakoska@repro.com.br,silvano.silva@repro.com.br") %>% 
   gm_from ("comunicacao@repro.com.br") %>%
-  gm_subject("RELATORIO FILL RATE") %>%
-  gm_text_body("Segue Anexo relatorio.Esse e um email automatico.") %>% 
-  gm_attach_file(filewd_emp_mail)
+  gm_subject("RELATORIO FILL RATE LENTES ACABADAS SEMANA 4 - 23/01/2022 - 29/01/2022") %>%
+  gm_text_body("Segue Anexo relatorio SEMANA 4 - 23/01/2022 - 29/01/2022") %>% 
+  gm_attach_file(filewd_emp_mail_LA) 
 
-gm_send_message(mymail_fillrate)
+gm_send_message(mymail_fillrate_LA)

@@ -1,5 +1,5 @@
 ### FILL RATE REPRO
-## SANDRO JAKOSKA 2023
+## SANDRO JAKOSKA 2022
 
 ## LIBRARIES
 
@@ -12,11 +12,19 @@ con2 <- dbConnect(odbc::odbc(), "reproreplica")
 
 ### TOTAL PEDIDOS
 
-tot_ped <- dbGetQuery(con2,"
+tot_ped_LA0212 <- dbGetQuery(con2,"
 WITH  
 RESULT1 AS (SELECT P.ID_PEDIDO,TPCODIGO,AP.APCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE PROCODIGO2='LA0212') PR 
+                 ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
+
 WHERE 
 
 /* DATES */ 
@@ -32,7 +40,16 @@ AND PEDSITPED IN ('A','F') ),
 
 RESULT3 AS (SELECT P.ID_PEDIDO,TPCODIGO,AP.APCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE PROCODIGO2='LA0212') PR 
+                 ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
+
+
 WHERE 
 
 /* DATES */ 
@@ -48,7 +65,16 @@ AND PEDSITPED IN ('A','F') ),
 
 RESULT4 AS (SELECT P.ID_PEDIDO,TPCODIGO,AP.APCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE PROCODIGO2='LA0212') PR 
+                 ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
+
+
 WHERE 
 
 /* DATES */ 
@@ -64,7 +90,15 @@ AND PEDSITPED IN ('A','F') ),
 
 RESULT5 AS (SELECT P.ID_PEDIDO,TPCODIGO,AP.APCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE PROCODIGO2='LA0212') 
+                  PR ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
+
 WHERE 
 
 /* DATES */ 
@@ -80,7 +114,15 @@ AND PEDSITPED IN ('A','F') ),
 
 RESULT8 AS (SELECT P.ID_PEDIDO,TPCODIGO,AP.APCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE PROCODIGO2='LA0212') 
+                  PR ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
+
 WHERE 
 
 /* DATES */ 
@@ -96,7 +138,15 @@ AND PEDSITPED IN ('A','F')),
 
 RESULT9 AS (SELECT P.ID_PEDIDO,TPCODIGO,AP.APCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE PROCODIGO2='LA0212') 
+                  PR ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
+
 WHERE 
 
 /* DATES */ 
@@ -181,13 +231,20 @@ AND PEDSITPED IN ('A','F'))
 ") 
 
 
-tot_ped_natd <- dbGetQuery(con2,"
+tot_ped_natd_LA0212 <- dbGetQuery(con2,"
 WITH 
 RESULT1 AS (SELECT P.ID_PEDIDO,
                     TPCODIGO,
                      AP.APCODIGO,
                       LP.LPCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE PROCODIGO2='LA0212') 
+                  PR ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
 LEFT JOIN LOCALPED LP ON LP.LPCODIGO  = AP.LPCODIGO 
 WHERE 
@@ -209,6 +266,13 @@ RESULT3 AS (SELECT P.ID_PEDIDO,
                       AP.APCODIGO, 
                        LP.LPCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE PROCODIGO2='LA0212') 
+                  PR ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+                  
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
 LEFT JOIN LOCALPED LP ON LP.LPCODIGO  = AP.LPCODIGO 
 WHERE 
@@ -230,6 +294,13 @@ RESULT4 AS (SELECT P.ID_PEDIDO,
                      AP.APCODIGO,
                       LP.LPCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE PROCODIGO2='LA0212') 
+                  PR ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+                  
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
 LEFT JOIN LOCALPED LP ON LP.LPCODIGO  = AP.LPCODIGO 
 WHERE 
@@ -250,6 +321,13 @@ RESULT5 AS (SELECT P.ID_PEDIDO,
                       AP.APCODIGO,
                        LP.LPCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE PROCODIGO2='LA0212') 
+                  PR ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
 LEFT JOIN LOCALPED LP ON LP.LPCODIGO  = AP.LPCODIGO 
 WHERE 
@@ -270,6 +348,13 @@ RESULT8 AS (SELECT P.ID_PEDIDO,
                      AP.APCODIGO,
                       LP.LPCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE PROCODIGO2='LA0212') 
+                  PR ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
 LEFT JOIN LOCALPED LP ON LP.LPCODIGO  = AP.LPCODIGO 
 WHERE 
@@ -290,6 +375,13 @@ RESULT9 AS (SELECT P.ID_PEDIDO,
                      AP.APCODIGO,
                       LP.LPCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE PROCODIGO2='LA0212') 
+                  PR ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+                  
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
 LEFT JOIN LOCALPED LP ON LP.LPCODIGO  = AP.LPCODIGO 
 WHERE 
@@ -409,7 +501,7 @@ AND PEDSITPED IN ('A','F') )
 ")
 
 
-ped_control <- dbGetQuery(con2,"
+ped_control_LA0212 <- dbGetQuery(con2,"
   EXECUTE BLOCK RETURNS (EMPRESA VARCHAR(30),TIPO VARCHAR(30),INDICADOR VARCHAR(30),TOTAL DECIMAL(15,2))
   
   AS DECLARE VARIABLE CLIENTE INT;
@@ -436,6 +528,13 @@ ped_control <- dbGetQuery(con2,"
                                  TPCODIGO,
                                   COUNT (DISTINCT (P.ID_PEDIDO)) TOTAL,'CONTROL' INDICADOR
                                    FROM PEDID P
+                                   
+                                    /* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT ID_PEDIDO
+              FROM PDPRD PD
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE PROCODIGO2='LA0212') 
+                  PR ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+                  
                                     WHERE P.PEDSITPED IN ('A','F')
                                      AND P.CLICODIGO = :CLIENTE AND P.TPCODIGO IN ('10','11') AND 
 
@@ -461,7 +560,7 @@ AND PR2.ID_PEDIDO = P.ID_PEDIDO) GROUP BY 1,2
   
   ")
 
-ped_quebras <- dbGetQuery(con2,"
+ped_quebras_LA0212 <- dbGetQuery(con2,"
 SELECT 
       CASE 
        WHEN EMPCODIGO=1 THEN 'MATRIZ' 
@@ -473,8 +572,15 @@ SELECT
       
         TPCODIGO TIPO,
          'QUEBRAS' INDICADOR,
-           COUNT(ID_PEDIDO) TOTAL
-            FROM PEDID
+           COUNT(P.ID_PEDIDO) TOTAL
+            FROM PEDID P
+             
+            /* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE PROCODIGO2='LA0212') 
+                  PR ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+                  
              WHERE FISCODIGO1='5.927'
               AND CLICODIGO=579
               /* DATES */ 
@@ -485,10 +591,10 @@ SELECT
 
 ## RESUMO PEDIDOS POR TIPO
 
-fillrate_resumo_1 <- rbind(tot_ped,tot_ped_natd,ped_control,ped_quebras) %>% 
+fillrate_resumo_1_LA0212 <- rbind(tot_ped_LA0212,tot_ped_natd_LA0212,ped_control_LA0212,ped_quebras_LA0212) %>% 
   mutate(TIPO=as.numeric(TIPO))
 
-fillrate_resumo_2 <- fillrate_resumo_1 %>% 
+fillrate_resumo_2_LA0212 <- fillrate_resumo_1_LA0212 %>% 
   dcast(EMPRESA + INDICADOR ~ TIPO,value.var = "TOTAL") %>% 
   arrange(desc(EMPRESA)) %>% 
   as.data.frame()  %>% 
@@ -499,13 +605,13 @@ fillrate_resumo_2 <- fillrate_resumo_1 %>%
 
 
 
-View(fillrate_resumo_2)
+View(fillrate_resumo_2_LA0212)
 
 ## SAVE SUMMARY 
 
-filewd_fillrate_resumo_2 <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_resumo_2","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+filewd_fillrate_resumo_2_LA0212 <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_resumo_2_LA0212","_",format(Sys.Date(),"%d_%m_%y"),".RData")
 
-save(fillrate_resumo_2,file =filewd_fillrate_resumo_2)
+save(fillrate_resumo_2_LA0212,file =filewd_fillrate_resumo_2_LA0212)
 
 
 
@@ -514,7 +620,7 @@ save(fillrate_resumo_2,file =filewd_fillrate_resumo_2)
 
 ## CALCULO FILIAIS 
 
-fillrate_calc_filiais <- fillrate_resumo_1 %>% 
+fillrate_calc_filiais_LA0212 <- fillrate_resumo_1_LA0212 %>% 
   filter(!str_detect(EMPRESA,"MATRIZ")) %>% 
   group_by(EMPRESA) %>% 
   mutate(INDICADOR=trimws(INDICADOR)) %>% 
@@ -526,7 +632,7 @@ fillrate_calc_filiais <- fillrate_resumo_1 %>%
 
 ## CALCULO MATRIZ
 
-fillrate_calc_matriz_1 <- fillrate_resumo_1 %>%  
+fillrate_calc_matriz_1_LA0212 <- fillrate_resumo_1_LA0212 %>%  
   filter(str_detect(EMPRESA,"MATRIZ"))%>% 
   group_by(EMPRESA) %>% 
   mutate(INDICADOR=trimws(INDICADOR)) %>% 
@@ -534,7 +640,7 @@ fillrate_calc_matriz_1 <- fillrate_resumo_1 %>%
   mutate(VALOR=round(VALOR,2)) %>% mutate(INDICADOR="FILL RATE: NAO ATENDIDOS x TOTAL") %>% 
   mutate(DATA=Sys.Date()) %>% as.data.frame() %>% .[,c(1,3,2,4)] 
 
-fillrate_calc_matriz_2 <- fillrate_resumo_1 %>%  
+fillrate_calc_matriz_2_LA0212 <- fillrate_resumo_1_LA0212 %>%  
   mutate(INDICADOR=trimws(INDICADOR)) %>% 
   filter(str_detect(EMPRESA,"MATRIZ"))%>% 
   group_by(EMPRESA) %>%
@@ -542,7 +648,7 @@ fillrate_calc_matriz_2 <- fillrate_resumo_1 %>%
   mutate(VALOR=round(VALOR,2)) %>% mutate(INDICADOR="FILL RATE: CONTROL NAO ATENDIDOS x CONTROL TOTAL") %>% 
   mutate(DATA=Sys.Date()) %>% as.data.frame() %>% .[,c(1,3,2,4)] 
 
-fillrate_calc_matriz_3 <- fillrate_resumo_1 %>%  
+fillrate_calc_matriz_3_LA0212 <- fillrate_resumo_1_LA0212 %>%  
   mutate(INDICADOR=trimws(INDICADOR)) %>% 
   filter(str_detect(EMPRESA,"MATRIZ"))%>% 
   group_by(EMPRESA) %>%
@@ -551,24 +657,24 @@ fillrate_calc_matriz_3 <- fillrate_resumo_1 %>%
   mutate(DATA=Sys.Date()) %>% as.data.frame() %>% .[,c(1,3,2,4)] 
 
 
-fillrate_calc <- union_all(fillrate_calc_filiais,fillrate_calc_matriz_1) %>% 
-  union_all(.,fillrate_calc_matriz_2) %>% 
-  union_all(.,fillrate_calc_matriz_3) %>% rename(TOTAL=VALOR)
+fillrate_calc_LA0212 <- union_all(fillrate_calc_filiais_LA0212,fillrate_calc_matriz_1_LA0212) %>% 
+  union_all(.,fillrate_calc_matriz_2_LA0212) %>% 
+  union_all(.,fillrate_calc_matriz_3_LA0212) %>% rename(TOTAL=VALOR)
 
 
 
 ## SAVE CALC SUMMARY 
 
-filewd_fillrate_calc<-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_calc","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+filewd_fillrate_calc_LA0212<-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_calc_LA0212","_",format(Sys.Date(),"%d_%m_%y"),".RData")
 
-save(fillrate_calc,file =filewd_fillrate_calc)
+save(fillrate_calc_LA0212,file =filewd_fillrate_calc_LA0212)
 
 
 ## START ORDER DETAILS =========================================================================================
 
 # MATRIZ
 
-fillrate_mp_matriz  <- dbGetQuery(con2,"
+fillrate_mp_matriz_LA0212 <- dbGetQuery(con2,"
   EXECUTE BLOCK RETURNS (
                         EMPRESA VARCHAR(30),
                          INDICADOR VARCHAR(30),
@@ -592,6 +698,13 @@ fillrate_mp_matriz  <- dbGetQuery(con2,"
 WITH 
 RESULT1 AS (SELECT DISTINCT P.ID_PEDIDO,PEDDTEMIS,AP.APCODIGO,LP.LPCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE PROCODIGO2='LA0212') 
+                  PR ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+                  
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
 LEFT JOIN LOCALPED LP ON LP.LPCODIGO  = AP.LPCODIGO 
 WHERE
@@ -680,7 +793,7 @@ SELECT
   ")
 
 #JOINVILLE
-fillrate_mp_joinville  <- dbGetQuery(con2,"
+fillrate_mp_joinville_LA0212  <- dbGetQuery(con2,"
   EXECUTE BLOCK RETURNS ( 
                       EMPRESA VARCHAR(30),
                        INDICADOR VARCHAR(30), 
@@ -705,6 +818,13 @@ fillrate_mp_joinville  <- dbGetQuery(con2,"
 WITH 
 RESULT3 AS (SELECT DISTINCT P.ID_PEDIDO,PEDDTEMIS,AP.APCODIGO,LP.LPCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE PROCODIGO2='LA0212') 
+                  PR ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+                  
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
 LEFT JOIN LOCALPED LP ON LP.LPCODIGO  = AP.LPCODIGO 
 WHERE 
@@ -797,7 +917,7 @@ SELECT
   ")
 
 #CRICIUMA
-fillrate_mp_criciuma  <- dbGetQuery(con2,"
+fillrate_mp_criciuma_LA0212  <- dbGetQuery(con2,"
  EXECUTE BLOCK RETURNS ( 
                       EMPRESA VARCHAR(30), 
                        INDICADOR VARCHAR(30),
@@ -821,6 +941,13 @@ fillrate_mp_criciuma  <- dbGetQuery(con2,"
 WITH 
 RESULT1 AS (SELECT DISTINCT P.ID_PEDIDO,PEDDTEMIS,AP.APCODIGO,LP.LPCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE PROCODIGO2='LA0212') 
+                  PR ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+                  
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
 LEFT JOIN LOCALPED LP ON LP.LPCODIGO  = AP.LPCODIGO 
 WHERE 
@@ -914,7 +1041,7 @@ SELECT
   ")
 
 #CHAPECO
-fillrate_mp_chapeco  <- dbGetQuery(con2,"
+fillrate_mp_chapeco_LA0212  <- dbGetQuery(con2,"
  EXECUTE BLOCK RETURNS ( 
                       EMPRESA VARCHAR(30),
                        INDICADOR VARCHAR(30), 
@@ -938,6 +1065,13 @@ fillrate_mp_chapeco  <- dbGetQuery(con2,"
 WITH 
 RESULT1 AS (SELECT DISTINCT P.ID_PEDIDO,PEDDTEMIS,AP.APCODIGO,LP.LPCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE PROCODIGO2='LA0212') 
+                  PR ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
 LEFT JOIN LOCALPED LP ON LP.LPCODIGO  = AP.LPCODIGO 
 WHERE 
@@ -1029,7 +1163,7 @@ SELECT
   ")
 
 #BC
-fillrate_mp_bc  <- dbGetQuery(con2,"
+fillrate_mp_bc_LA0212  <- dbGetQuery(con2,"
  EXECUTE BLOCK RETURNS ( 
                       EMPRESA VARCHAR(30), 
                        INDICADOR VARCHAR(30), 
@@ -1053,6 +1187,13 @@ fillrate_mp_bc  <- dbGetQuery(con2,"
 WITH 
 RESULT1 AS (SELECT DISTINCT P.ID_PEDIDO,PEDDTEMIS,AP.APCODIGO,LP.LPCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE PROCODIGO2='LA0212') 
+                  PR ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+                  
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
 LEFT JOIN LOCALPED LP ON LP.LPCODIGO  = AP.LPCODIGO 
 WHERE 
@@ -1149,7 +1290,7 @@ SELECT
 
 
 # CONTROL
-fillrate_mp_control  <- dbGetQuery(con2,"
+fillrate_mp_control_LA0212  <- dbGetQuery(con2,"
  EXECUTE BLOCK RETURNS ( 
                       EMPRESA VARCHAR(30), 
                        INDICADOR VARCHAR(30), 
@@ -1173,6 +1314,13 @@ fillrate_mp_control  <- dbGetQuery(con2,"
 SELECT DISTINCT
    PE.ID_PEDIDO
 FROM PEDID PE
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE PROCODIGO2='LA0212') 
+                  PR ON PR.PROCODIGO=PD.PROCODIGO) PRD ON PE.ID_PEDIDO=PRD.ID_PEDIDO 
+
 WHERE 
 
 /* DATES */ 
@@ -1268,7 +1416,7 @@ SELECT
 # CONTROL NOT ATEND MATRIZ
 
 
-fillrate_mp_control_matriz  <- dbGetQuery(con2,"
+fillrate_mp_control_matriz_LA0212  <- dbGetQuery(con2,"
   EXECUTE BLOCK RETURNS (
                         EMPRESA VARCHAR(30),
                          INDICADOR VARCHAR(30),
@@ -1292,6 +1440,13 @@ fillrate_mp_control_matriz  <- dbGetQuery(con2,"
 WITH 
 RESULT11 AS (SELECT DISTINCT P.ID_PEDIDO,PEDDTEMIS,AP.APCODIGO,LP.LPCODIGO FROM
 PEDID P
+
+/* FILTER LENS */  
+INNER JOIN (SELECT DISTINCT PD.ID_PEDIDO
+              FROM PDPRD PD
+                INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE PROCODIGO2='LA0212') 
+                  PR ON PR.PROCODIGO=PD.PROCODIGO) PRD ON P.ID_PEDIDO=PRD.ID_PEDIDO 
+
 LEFT JOIN ACOPED AP ON AP.ID_PEDIDO= P.ID_PEDIDO
 LEFT JOIN LOCALPED LP ON LP.LPCODIGO  = AP.LPCODIGO 
 WHERE 
@@ -1382,39 +1537,33 @@ SELECT
 
 # ADD ALL BLOCKS
 
-fillrate_mp_emp <- union_all(fillrate_mp_matriz,fillrate_mp_joinville) %>% 
-  union_all(.,fillrate_mp_criciuma) %>% 
-  union_all(.,fillrate_mp_chapeco) %>% 
-  union_all(.,fillrate_mp_bc) %>% 
-  union_all(.,fillrate_mp_control) %>% 
-  union_all(.,fillrate_mp_control_matriz) %>% 
+fillrate_mp_emp_LA0212 <- union_all(fillrate_mp_matriz_LA0212,fillrate_mp_joinville_LA0212) %>% 
+  union_all(.,fillrate_mp_criciuma_LA0212) %>% 
+  union_all(.,fillrate_mp_chapeco_LA0212) %>% 
+  union_all(.,fillrate_mp_bc_LA0212) %>% 
+  union_all(.,fillrate_mp_control_LA0212) %>% 
+  union_all(.,fillrate_mp_control_matriz_LA0212) %>% 
   mutate(DATA=Sys.Date()) %>% distinct() %>% as.data.frame()
-
-fillrate_mp_emp <- fillrate_mp_emp %>% 
-  filter(substr(trimws(MATERIAL), 1, 2)!='LD') %>% 
-  filter(substr(trimws(MATERIAL), 1, 3)!='PAP') %>% 
-  filter(substr(trimws(MATERIAL), 1, 2)!='LP') %>% 
-  filter(trimws(UN)!='PR') 
 
 
 # SAVE CURRENT DAY
 
-filewd_emp <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_mp_emp","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+filewd_emp_LA0212 <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_mp_emp_LA0212","_",format(Sys.Date(),"%d_%m_%y"),".RData")
 
-save(fillrate_mp_emp,file =filewd_emp)
+save(fillrate_mp_emp_LA0212,file =filewd_emp_LA0212)
 
 
 # AGGREG MP AND SUM
 
-fillrate_mp_emp_resumo <- fillrate_mp_emp %>% group_by(INDICADOR,CHAVE,DESCRICAO_CHAVE) %>% 
+fillrate_mp_emp_resumo_LA0212 <- fillrate_mp_emp_LA0212 %>% group_by(INDICADOR,CHAVE,DESCRICAO_CHAVE) %>% 
   summarize(QTD=sum(QTD)) %>% 
   arrange(desc(QTD)) %>% 
   mutate(DATA=Sys.Date()) %>%  as.data.frame()
 
-filewd_emp_resumo <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_mp_emp_resumo","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+filewd_emp_resumo_LA0212 <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_mp_emp_resumo_LA0212","_",format(Sys.Date(),"%d_%m_%y"),".RData")
 
 
-save(fillrate_mp_emp_resumo,file =filewd_emp_resumo)
+save(fillrate_mp_emp_resumo_LA0212,file =filewd_emp_resumo_LA0212)
 
 
 ##  SEND EMAIL  ==============================================================================================
@@ -1422,43 +1571,43 @@ save(fillrate_mp_emp_resumo,file =filewd_emp_resumo)
 library(gmailr)
 library(xlsx)
 
-gm_auth_configure(path = "C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\sendmail.json")
+gm_auth_configure(path = "C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\sendmail.json")
 
 
 #RESUMO
-filewd_fillrate_resumo <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_resumo_2","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+filewd_fillrate_resumo_LA0212 <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_resumo_2_LA0212","_",format(Sys.Date(),"%d_%m_%y"),".RData")
 
-fillrate_resumo <- get(load(filewd_fillrate_resumo)) %>% as.data.frame()
+fillrate_resumo_LA0212 <- get(load(filewd_fillrate_resumo_LA0212)) %>% as.data.frame()
 
 #CALCULO
-filewd_fillrate_calc <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_calc","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+filewd_fillrate_calc_LA0212 <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_calc_LA0212","_",format(Sys.Date(),"%d_%m_%y"),".RData")
 
-fillrate_calc <- get(load(filewd_fillrate_calc))
+fillrate_calc_LA0212 <- get(load(filewd_fillrate_calc_LA0212))
 
 #DADOS MP
-filewd_emp <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_mp_emp","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+filewd_emp_LA0212 <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_mp_emp_LA0212","_",format(Sys.Date(),"%d_%m_%y"),".RData")
 
-fillrate_mp_emp <- get(load(filewd_emp))
+fillrate_mp_emp_LA0212 <- get(load(filewd_emp_LA0212))
 
 ## RESUMO MP
-filewd_emp_resumo <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_mp_emp_resumo","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+filewd_emp_resumo_LA0212 <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_mp_emp_resumo_LA0212","_",format(Sys.Date(),"%d_%m_%y"),".RData")
 
-fillrate_mp_emp_resumo <- get(load(filewd_emp_resumo))
-
-
-filewd_emp_mail <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_mp_emp","_",format(Sys.Date(),"%d_%m_%y"),".xlsx")
-
-write.xlsx(fillrate_resumo, file = filewd_emp_mail,row.names=FALSE,sheetName = "RESUMO",showNA=FALSE)
-write.xlsx(fillrate_calc, file = filewd_emp_mail,row.names=FALSE,sheetName = "CALCULO_FILLRATE",showNA=FALSE,append = TRUE)
-write.xlsx(fillrate_mp_emp, file = filewd_emp_mail,row.names=FALSE,sheetName = "DADOS",append = TRUE)
-write.xlsx(fillrate_mp_emp_resumo, file = filewd_emp_mail,row.names=FALSE,sheetName = "DADOS2", append = TRUE)
+fillrate_mp_emp_resumo_LA0212 <- get(load(filewd_emp_resumo_LA0212))
 
 
-mymail_fillrate <- gm_mime() %>% 
-  gm_to("sandro.jakoska@repro.com.br") %>% 
+filewd_emp_mail_LA0212 <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\FILLRATE\\BASES\\fillrate_mp_emp_LA0212","_",format(Sys.Date(),"%d_%m_%y"),".xlsx")
+
+write.xlsx(fillrate_resumo_LA0212, file = filewd_emp_mail_LA0212,row.names=FALSE,sheetName = "RESUMO",showNA=FALSE)
+write.xlsx(fillrate_calc_LA0212, file = filewd_emp_mail_LA0212,row.names=FALSE,sheetName = "CALCULO_FILLRATE",showNA=FALSE,append = TRUE)
+write.xlsx(fillrate_mp_emp_LA0212, file = filewd_emp_mail_LA0212,row.names=FALSE,sheetName = "DADOS",append = TRUE)
+write.xlsx(fillrate_mp_emp_resumo_LA0212, file = filewd_emp_mail_LA0212,row.names=FALSE,sheetName = "DADOS2", append = TRUE)
+
+
+mymail_fillrate_LA0212 <- gm_mime() %>% 
+  gm_to("sandro.jakoska@repro.com.br,silvano.silva@repro.com.br") %>% 
   gm_from ("comunicacao@repro.com.br") %>%
-  gm_subject("RELATORIO FILL RATE") %>%
-  gm_text_body("Segue Anexo relatorio.Esse e um email automatico.") %>% 
-  gm_attach_file(filewd_emp_mail)
+  gm_subject("RELATORIO FILL RATE LA0212") %>%
+  gm_text_body("Segue Anexo relatorio dos últimos 7 dias.Esse e um email automatico.") %>% 
+  gm_attach_file(filewd_emp_mail_LA0212)
 
-gm_send_message(mymail_fillrate)
+gm_send_message(mymail_fillrate_LA0212)
