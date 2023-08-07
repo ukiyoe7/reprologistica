@@ -63,3 +63,89 @@ fillrate_resumo_2_blocos_gx <- fillrate_resumo_1_blocos_gx %>%
 
 View(fillrate_resumo_2_blocos_gx)
 
+## SAVE SUMMARY 
+
+filewd_fillrate_resumo_2_blocos_gx <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_resumo_2_blocos_gx","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+
+save(fillrate_resumo_2_blocos_gx,file =filewd_fillrate_resumo_2_blocos_gx)
+
+## CALCULO FILL RATE =================================================================
+
+
+## CALCULO FILIAIS 
+
+fillrate_calc_filiais_blocos_gx <- fillrate_resumo_1_blocos_gx %>% 
+  filter(!str_detect(EMPRESA,"MATRIZ")) %>% 
+  group_by(EMPRESA) %>% 
+  mutate(INDICADOR=trimws(INDICADOR)) %>% 
+  summarize(VALOR=(1-((sum(TOTAL[INDICADOR=='CONTROL'])+sum(TOTAL[INDICADOR=='PEDIDOS NAO ATENDIDOS']))/
+                        sum(TOTAL[INDICADOR=='TOTAL PEDIDOS'])))*100) %>%
+  mutate(VALOR=round(VALOR,2)) %>% mutate(INDICADOR="FILL RATE: CONTROL + NAO ATENDIDOS x TOTAL PEDIDOS") %>% 
+  mutate(DATA=Sys.Date()) %>% as.data.frame() %>% .[,c(1,3,2,4)] 
+
+
+## CALCULO MATRIZ
+
+fillrate_calc_matriz_1_blocos_gx <- fillrate_resumo_1_blocos_gx %>%  
+  filter(str_detect(EMPRESA,"MATRIZ"))%>% 
+  group_by(EMPRESA) %>% 
+  mutate(INDICADOR=trimws(INDICADOR)) %>% 
+  summarize(VALOR=(1-((sum(TOTAL[INDICADOR=='PEDIDOS NAO ATENDIDOS']))/sum(TOTAL[INDICADOR=='TOTAL PEDIDOS'])))*100) %>%
+  mutate(VALOR=round(VALOR,2)) %>% mutate(INDICADOR="FILL RATE: NAO ATENDIDOS x TOTAL") %>% 
+  mutate(DATA=Sys.Date()) %>% as.data.frame() %>% .[,c(1,3,2,4)] 
+
+fillrate_calc_matriz_2_blocos_gx <- fillrate_resumo_1_blocos_gx %>%  
+  mutate(INDICADOR=trimws(INDICADOR)) %>% 
+  filter(str_detect(EMPRESA,"MATRIZ"))%>% 
+  group_by(EMPRESA) %>%
+  summarize(VALOR=(1-((sum(TOTAL[INDICADOR=='PEDIDOS CONTROL NAO ATENDIDOS']))/sum(TOTAL[INDICADOR=='TOTAL PEDIDOS CONTROL'])))*100) %>%
+  mutate(VALOR=round(VALOR,2)) %>% mutate(INDICADOR="FILL RATE: CONTROL NAO ATENDIDOS x CONTROL TOTAL") %>% 
+  mutate(DATA=Sys.Date()) %>% as.data.frame() %>% .[,c(1,3,2,4)] 
+
+fillrate_calc_matriz_3_blocos_gx <- fillrate_resumo_1_blocos_gx %>%  
+  mutate(INDICADOR=trimws(INDICADOR)) %>% 
+  filter(str_detect(EMPRESA,"MATRIZ"))%>% 
+  group_by(EMPRESA) %>%
+  summarize(VALOR=(1-((sum(TOTAL[INDICADOR=='PEDIDOS CONTROL NAO ATENDIDOS']))/sum(TOTAL[INDICADOR=='TOTAL PEDIDOS'])))*100) %>%
+  mutate(VALOR=round(VALOR,2)) %>% mutate(INDICADOR="FILL RATE: CONTROL NAO ATENDIDOS x TOTAL PEDIDOS") %>% 
+  mutate(DATA=Sys.Date()) %>% as.data.frame() %>% .[,c(1,3,2,4)] 
+
+
+fillrate_calc_blocos_gx <- union_all(fillrate_calc_filiais_blocos_gx,fillrate_calc_matriz_1_blocos_gx) %>% 
+  union_all(.,fillrate_calc_matriz_2_blocos_gx) %>% 
+  union_all(.,fillrate_calc_matriz_3_blocos_gx) %>% rename(TOTAL=VALOR)
+
+
+
+## SAVE CALC SUMMARY 
+
+filewd_fillrate_calc_blocos_gx<-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_calc_blocos_gx","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+
+save(fillrate_calc_blocos_gx,file =filewd_fillrate_calc_blocos_gx)
+
+
+## START ORDER DETAILS =========================================================================================
+
+# MATRIZ
+
+fillrate_mp_matriz_blocos_gx <- dbGetQuery(con2,statement = read_file('C:/Users/Repro/Documents/R/LOGISTICA/LOGISTICA/SQL/fillrate_mp_matriz_blocos_gx.sql')) 
+
+View(fillrate_mp_matriz_blocos_gx)
+
+fillrate_mp_joinville_blocos_gx <- dbGetQuery(con2,statement = read_file('C:/Users/Repro/Documents/R/LOGISTICA/LOGISTICA/SQL/fillrate_mp_joinville_blocos_gx.sql')) 
+
+View(fillrate_mp_joinville_blocos_gx)
+
+fillrate_mp_criciuma_blocos_gx <- dbGetQuery(con2,statement = read_file('C:/Users/Repro/Documents/R/LOGISTICA/LOGISTICA/SQL/fillrate_mp_criciuma_blocos_gx.sql')) 
+
+View(fillrate_mp_criciuma_blocos_gx)
+
+fillrate_mp_chapeco_blocos_gx <- dbGetQuery(con2,statement = read_file('C:/Users/Repro/Documents/R/LOGISTICA/LOGISTICA/SQL/fillrate_mp_chapeco_blocos_gx.sql')) 
+
+View(fillrate_mp_chapeco_blocos_gx)
+
+fillrate_mp_bc_blocos_gx <- dbGetQuery(con2,statement = read_file('C:/Users/Repro/Documents/R/LOGISTICA/LOGISTICA/SQL/fillrate_mp_bc_blocos_gx.sql')) 
+
+View(fillrate_mp_bc_blocos_gx)
+
+
