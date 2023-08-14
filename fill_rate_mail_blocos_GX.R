@@ -9,43 +9,25 @@ library(googlesheets4)
 library(readr)
 con2 <- dbConnect(odbc::odbc(), "reproreplica")
 
-blocos_gx <- dbGetQuery(con2,"SELECT PROCODIGO FROM PRODU WHERE PROCODIGO2='MF0317'")
-
-View(blocos_gx)
-
-blocos_gx_compo <- dbGetQuery(con2,"
-WITH 
-PEDID_DATE AS (SELECT ID_PEDIDO FROM PEDID WHERE PEDDTBAIXA >=DATEADD(-90 DAY TO CURRENT_DATE))
-
-SELECT
-DISTINCT
-PCP.ID_PEDIDO
-FROM PEDCELPDCAO PCP
-INNER JOIN PEDID_DATE P ON PCP.ID_PEDIDO=P.ID_PEDIDO
-LEFT JOIN PDCAO PDC ON PCP.PDCCODIGO = PDC.PDCCODIGO AND PCP.EMPPDCCODIGO = PDC.EMPCODIGO
-LEFT JOIN REQUI REQ ON PDC.PDCCODIGO = REQ.PDCCODIGO AND PDC.EMPCODIGO = REQ.EMPCODIGO
-LEFT JOIN REQPRO RP ON RP.REQCODIGO = REQ.REQCODIGO AND RP.EMPCODIGO = REQ.EMPCODIGO
-INNER JOIN (SELECT PROCODIGO FROM PRODU WHERE PROCODIGO2 IN('MF0317','MF0322','MF0323','MF0385','MF0391','MF0396','MF0397','MF0398','MF0399','MF0404','MF0405','MF0417','MF0418','MF0419','MF0426'))PR ON RP.PROCODIGO=PR.PROCODIGO")
-
-View(blocos_gx_compo)
 
 ### TOTAL PEDIDOS
 
 tot_ped_blocos_gx <- dbGetQuery(con2,statement = read_file('C:/Users/Repro/Documents/R/LOGISTICA/LOGISTICA/SQL/tot_ped_blocos_gx.sql')) 
 
-View(tot_ped_blocos_gx)
+
+### TOTAL PEDIDOS NAO ATENDIDOS
 
 tot_ped_natd_blocos_gx <- dbGetQuery(con2,statement = read_file('C:/Users/Repro/Documents/R/LOGISTICA/LOGISTICA/SQL/tot_ped_natd_blocos_gx.sql')) 
 
-View(tot_ped_natd_blocos_gx)
+
+### PEDIDOS CONTROL
 
 ped_control_blocos_gx <- dbGetQuery(con2,statement = read_file('C:/Users/Repro/Documents/R/LOGISTICA/LOGISTICA/SQL/ped_control_blocos_gx.sql')) 
 
-View(ped_control_blocos_gx)
+
+### PEDIDOS QUEBRAS
 
 ped_quebras_blocos_gx <- dbGetQuery(con2,statement = read_file('C:/Users/Repro/Documents/R/LOGISTICA/LOGISTICA/SQL/ped_quebras_blocos_gx.sql')) 
-
-View(ped_quebras_blocos_gx)
 
 
 ## RESUMO PEDIDOS POR TIPO
@@ -60,8 +42,6 @@ fillrate_resumo_2_blocos_gx <- fillrate_resumo_1_blocos_gx %>%
   rowwise() %>% 
   mutate(TOTAL= rowSums(across(where(is.numeric)),na.rm = TRUE)) %>% 
   mutate(DATA=Sys.Date())
-
-View(fillrate_resumo_2_blocos_gx)
 
 ## SAVE SUMMARY 
 
@@ -130,22 +110,107 @@ save(fillrate_calc_blocos_gx,file =filewd_fillrate_calc_blocos_gx)
 
 fillrate_mp_matriz_blocos_gx <- dbGetQuery(con2,statement = read_file('C:/Users/Repro/Documents/R/LOGISTICA/LOGISTICA/SQL/fillrate_mp_matriz_blocos_gx.sql')) 
 
-View(fillrate_mp_matriz_blocos_gx)
 
 fillrate_mp_joinville_blocos_gx <- dbGetQuery(con2,statement = read_file('C:/Users/Repro/Documents/R/LOGISTICA/LOGISTICA/SQL/fillrate_mp_joinville_blocos_gx.sql')) 
 
-View(fillrate_mp_joinville_blocos_gx)
 
 fillrate_mp_criciuma_blocos_gx <- dbGetQuery(con2,statement = read_file('C:/Users/Repro/Documents/R/LOGISTICA/LOGISTICA/SQL/fillrate_mp_criciuma_blocos_gx.sql')) 
 
-View(fillrate_mp_criciuma_blocos_gx)
 
 fillrate_mp_chapeco_blocos_gx <- dbGetQuery(con2,statement = read_file('C:/Users/Repro/Documents/R/LOGISTICA/LOGISTICA/SQL/fillrate_mp_chapeco_blocos_gx.sql')) 
 
-View(fillrate_mp_chapeco_blocos_gx)
 
 fillrate_mp_bc_blocos_gx <- dbGetQuery(con2,statement = read_file('C:/Users/Repro/Documents/R/LOGISTICA/LOGISTICA/SQL/fillrate_mp_bc_blocos_gx.sql')) 
 
-View(fillrate_mp_bc_blocos_gx)
+
+fillrate_mp_control_blocos_gx <- dbGetQuery(con2,statement = read_file('C:/Users/Repro/Documents/R/LOGISTICA/LOGISTICA/SQL/fillrate_mp_control_blocos_gx.sql')) 
+
+
+fillrate_mp_control_matriz_blocos_gx <- dbGetQuery(con2,statement = read_file('C:/Users/Repro/Documents/R/LOGISTICA/LOGISTICA/SQL/fillrate_mp_control_matriz_blocos_gx.sql')) 
+
+
+
+# ADD ALL BLOCKS
+
+fillrate_mp_emp_blocos_gx <- union_all(fillrate_mp_matriz_blocos_gx,fillrate_mp_joinville_blocos_gx) %>% 
+  union_all(.,fillrate_mp_criciuma_blocos_gx) %>% 
+  union_all(.,fillrate_mp_chapeco_blocos_gx) %>% 
+  union_all(.,fillrate_mp_bc_blocos_gx) %>% 
+  union_all(.,fillrate_mp_control_blocos_gx) %>% 
+  union_all(.,fillrate_mp_control_matriz_blocos_gx) %>% 
+  filter(substr(CHAVE,1,2)=="MF") %>% 
+  mutate(DATA=Sys.Date()) %>% distinct() %>% as.data.frame()
+
+
+# SAVE CURRENT DAY
+
+filewd_emp_blocos_gx <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_mp_emp_blocos_gx","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+
+save(fillrate_mp_emp_blocos_gx,file =filewd_emp_blocos_gx)
+
+
+# AGGREG MP AND SUM
+
+fillrate_mp_emp_resumo_blocos_gx <- fillrate_mp_emp_blocos_gx %>% group_by(INDICADOR,CHAVE,DESCRICAO_CHAVE) %>% 
+  summarize(QTD=sum(QTD)) %>% 
+  arrange(desc(QTD)) %>% 
+  mutate(DATA=Sys.Date()) %>%  as.data.frame()
+
+filewd_emp_resumo_blocos_gx <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_mp_emp_resumo_blocos_gx","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+
+
+save(fillrate_mp_emp_resumo_blocos_gx,file =filewd_emp_resumo_blocos_gx)
+
+
+##  SEND EMAIL  ==============================================================================================
+
+library(gmailr)
+library(xlsx)
+
+gm_auth_configure(path = "C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\sendmail.json")
+
+
+#RESUMO
+filewd_fillrate_resumo_blocos_gx <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_resumo_2_blocos_gx","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+
+fillrate_resumo_blocos_gx <- get(load(filewd_fillrate_resumo_blocos_gx)) %>% as.data.frame()
+
+#CALCULO
+filewd_fillrate_calc_blocos_gx <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_calc_blocos_gx","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+
+fillrate_calc_blocos_gx <- get(load(filewd_fillrate_calc_blocos_gx))
+
+#DADOS MP
+filewd_emp_blocos_gx <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_mp_emp_blocos_gx","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+
+fillrate_mp_emp_blocos_gx <- get(load(filewd_emp_blocos_gx))
+
+## RESUMO MP
+filewd_emp_resumo_blocos_gx <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_mp_emp_resumo_blocos_gx","_",format(Sys.Date(),"%d_%m_%y"),".RData")
+
+fillrate_mp_emp_resumo_blocos_gx <- get(load(filewd_emp_resumo_blocos_gx))
+
+
+filewd_emp_mail_blocos_gx <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_mp_emp_blocos_gx","_",format(Sys.Date(),"%d_%m_%y"),".xlsx")
+
+write.xlsx(fillrate_resumo_blocos_gx, file = filewd_emp_mail_blocos_gx,row.names=FALSE,sheetName = "RESUMO",showNA=FALSE)
+write.xlsx(fillrate_calc_blocos_gx, file = filewd_emp_mail_blocos_gx,row.names=FALSE,sheetName = "CALCULO_FILLRATE",showNA=FALSE,append = TRUE)
+write.xlsx(fillrate_mp_emp_blocos_gx, file = filewd_emp_mail_blocos_gx,row.names=FALSE,sheetName = "DADOS", append = TRUE)
+write.xlsx(fillrate_mp_emp_resumo_blocos_gx, file = filewd_emp_mail_blocos_gx,row.names=FALSE,sheetName = "DADOS2", append = TRUE)
+
+filewd_emp_mail_blocos_gx2 <-  paste0("C:\\Users\\Repro\\Documents\\R\\LOGISTICA\\LOGISTICA\\BASES\\fillrate_mp_emp_blocos_gx2","_",format(Sys.Date(),"%d_%m_%y"),".csv")
+
+write.csv2(fillrate_mp_emp_blocos_gx, file = filewd_emp_mail_blocos_gx2,row.names=FALSE)
+
+
+mymail_fillrate_blocos_gx <- gm_mime() %>% 
+  gm_to("sandro.jakoska@repro.com.br,debora.rocha@repro.com.br,silvano.silva@repro.com.br") %>% 
+  gm_from ("comunicacao@repro.com.br") %>%
+  gm_subject("RELATORIO FILL RATE BLOCOS GX") %>%
+  gm_text_body("Segue Anexo relatorio dos últimos 7 dias .Esse e um email automatico.") %>% 
+  gm_attach_file(filewd_emp_mail_blocos_gx) 
+
+gm_send_message(mymail_fillrate_blocos_gx)
+
 
 
